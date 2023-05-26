@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "./styles.css";
-
+import { NewTodoForm } from "./NewTodoForm";
+import { TodoList } from "./TodoList";
 export default function App() {
-  const [newItem, setNewItem] = useState("");
+  
 
   const [todos, setTodos] = useState(() => {
     const localValue = localStorage.getItem("ITEMS")
@@ -14,19 +15,16 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem("ITEMS", JSON.stringify(todos))
   }, [todos])
-  
-  
-  function handleSubmit(e) {
-    e.preventDefault();
 
-    setTodos(currentTodos => {
-      return [
-        ...currentTodos,
-        { id: crypto.randomUUID(), title: newItem, completed: false },
-      ]
-    })
-    setNewItem("");
+  function addTodo(title) {
+   setTodos(currentTodos => {
+          return [
+            ...currentTodos,
+            { id: crypto.randomUUID(), title, completed: false },
+          ]
+        })
   }
+ 
 
   function toggleTodo(id, completed) {
     setTodos(currentTodos => {
@@ -47,37 +45,13 @@ export default function App() {
 
   return (
     <div>
-  <form onSubmit={handleSubmit} className="new-item-form">
-    <div className="form-row">
-      <label htmlFor="item">New Item</label>
-      <input 
-        value={newItem} 
-        onChange={e => setNewItem(e.target.value)} 
-        type="text" 
-        id="item" />
-    </div>
-    <button className="btn">Add</button>
-  </form>
+      <NewTodoForm  onSubmit={addTodo} />
   <h1 className="header">Todo List</h1>
-  <ul className="list">
-    {todos.length === 0 && "No Todos"}
-    {todos.map(todo => {
-      return (
-      <li key={todo.id}>
-      <label>
-        <input type="checkbox" checked={todo.completed}
-        onChange={e => toggleTodo(todo.id, e.target.checked)} />
-        {todo.title}
-      </label>
-      <button
-       onClick={() => deleteTodo(todo.id)}
-       className="btn btn-danger">Delete</button>  
-    </li>
-    )
-    })}
-    
-       
-  </ul>
+      <TodoList 
+      todos={todos} 
+      toggleTodo={toggleTodo}
+      deleteTodo={deleteTodo} 
+      />
   </div>
   )
 }

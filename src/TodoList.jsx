@@ -10,6 +10,7 @@ export function TodoList ( { todos, toggleTodo, deleteTodo } ) {
           id={todo.id} 
           completed={todo.completed}
           title={todo.title} 
+          timeStamp={todo.timeStamp}
           key={todo.id} 
           toggleTodo={toggleTodo}
           deleteTodo={deleteTodo}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./styles.css";
 import { NewTodoForm } from "./NewTodoForm";
 import { TodoList } from "./TodoList";
+import { IntroPlate } from "./IntroPlate";
 export default function App() {
   
 
@@ -11,16 +12,30 @@ export default function App() {
     return JSON.parse(localValue);
   })
 
+  const [time, setTime] = useState(new Date());
+
+  useEffect(()=>{
+    const timerId = setInterval(refreshClock, 1000);
+    return function cleanup() {
+      clearInterval(timerId);
+    }
+  }, []);
+
+  function refreshClock() {
+    setTime(new Date());
+  }
+
 
   useEffect(() => {
     localStorage.setItem("ITEMS", JSON.stringify(todos))
   }, [todos])
 
   function addTodo(title) {
+    const timeStamp = time.toLocaleTimeString();
    setTodos(currentTodos => {
           return [
             ...currentTodos,
-            { id: crypto.randomUUID(), title, completed: false },
+            { id: crypto.randomUUID(), title, completed: false, timeStamp },
           ]
         })
   }
@@ -45,8 +60,9 @@ export default function App() {
 
   return (
     <div>
+      
       <NewTodoForm  onSubmit={addTodo} />
-  <h1 className="header">Todo List</h1>
+      <IntroPlate time={time}/>
       <TodoList 
       todos={todos} 
       toggleTodo={toggleTodo}

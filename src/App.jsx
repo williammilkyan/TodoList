@@ -31,7 +31,7 @@ export default function App() {
   }, [todos])
 
   function addTodo(title) {
-    const timeStamp = time.toLocaleTimeString();
+    const timeStamp = `${time.toLocaleTimeString()} /M:${time.getMonth()}D:${time.getDate()}`;
    setTodos(currentTodos => {
           return [
             ...currentTodos,
